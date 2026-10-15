@@ -70,6 +70,8 @@ erDiagram
         VARCHAR last_name
         VARCHAR phone UK
         VARCHAR email UK
+        VARCHAR password
+        ENUM role
     }
 
     loans {
@@ -158,6 +160,8 @@ Registro de personas individuales facultadas para solicitar préstamos o realiza
 | `last_name` | `VARCHAR(50)` | NO | - | Apellidos del cliente. |
 | `phone` | `VARCHAR(8)` | NO | **UK** | Número telefónico de contacto (obligatorio, único, exactamente 8 dígitos). |
 | `email` | `VARCHAR(255)` | NO | **UK** | Correo electrónico de contacto (obligatorio, único). |
+| `password` | `VARCHAR(255)` | NO | - | Hash unidireccional de la contraseña (bcrypt) para autenticación. |
+| `role` | `ENUM('client', 'admin')` | NO | - | Rol de control de acceso RBAC (Default `'client'`). |
 
 ### 3.6. `loans` (Préstamos)
 Encabezado de la transacción de préstamo bibliotecario.
@@ -268,3 +272,39 @@ Entidad asociativa que desglosa los ítems vendidos en una transacción.
    - El catálogo `books` es polivalente: los libros en existencia (`stock`) pueden destinarse tanto para venta comercial como para préstamo en sala o a domicilio.
 6. **Límite Monetario:**
    - Los campos de tipo monetario (`price`, `total`, `unit_price`) utilizan el tipo `DECIMAL(6,2)`, soportando cifras de hasta Q 9,999.99 (nueve mil novecientos noventa y nueve con noventa y nueve centavos).
+
+---
+
+## 7. Despliegue y Administración con Docker
+
+La base de datos se despliega automáticamente mediante Docker Compose:
+
+### 7.1. Inicialización Automática
+Al levantar el contenedor por primera vez, el motor ejecuta en orden alfabético los scripts montados en `/docker-entrypoint-initdb.d/`:
+1. `database/script/01-init.sql`: Crea la base de datos `minerva_lib_db` y las 9 tablas con sus claves primarias, foráneas, índices y restricciones `CHECK`.
+2. `database/script/02-seed.sql`: Inserta los registros semilla para autores, editoriales, géneros, libros y clientes de prueba.
+
+### 7.2. Comandos Operativos
+
+* **Levantar solo la base de datos:**
+  ```bash
+  docker compose up -d db
+  ```
+* **Acceder a la consola interactiva de MySQL:**
+  ```bash
+  docker exec -it minerva_mysql mysql -u root -p
+  # Ingresar la contraseña definida en .env (por defecto: secretpassword)
+  ```
+* **Consultas rápidas desde la consola interactiva:**
+  ```sql
+  USE minerva_lib_db;
+  SHOW TABLES;
+  SELECT * FROM books;
+  SELECT id_client, name_client, email, role FROM clients;
+  ```
+* **Reiniciar base de datos limpia (eliminar volumen y re-ejecutar seeds):**
+  ```bash
+  docker compose down -v
+  docker compose up -d db
+  ```
+
