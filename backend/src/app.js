@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import { errorHandler } from './middlewares/error.middleware.js';
+import apiRouter from './routes/index.js';
 
 const app = express();
 
@@ -15,5 +17,9 @@ app.get('/api/minerva-lib/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+app.use('/api/minerva-lib', apiRouter); // Rutas que vienen desde index.js
+
+app.use(errorHandler); // Capturador de errores
 
 export default app;
