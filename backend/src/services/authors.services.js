@@ -6,14 +6,28 @@ export class AuthorService{
         const [ result ] = await Pool.execute(query, [data.name_author]);
 
         return{
-            id_author: result.insertId,
-            name_author: data.name_author
+            id: result.insertId,
+            name: data.name_author
         }
     }
 
     static async list(){
-        const query = 'SELECT * FROM authors ORDER BY id_author ASC';
+        const query = 'SELECT id_author AS id, name_author AS name FROM authors ORDER BY id_author ASC';
         const [ rows ] = await Pool.execute(query);
         return rows;
+    }
+
+    static async update(data, id){
+        const query = 'UPDATE authors SET name_author = IFNULL(?, name_author) WHERE id_author = ?';
+        const [ result ] = await Pool.execute(query, [data.name_author, id]);
+
+        if(result.affectedRows === 0){
+            return null;
+        }
+
+        return {
+            id: id,
+            name: data.name_author
+        };
     }
 }

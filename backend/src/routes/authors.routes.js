@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { validationsCreateAuthor } from "../dtos/authors.dto.js";
+import { validationsCreateAuthor, validationsUpdateAuthor } from "../dtos/authors.dto.js";
 import { managerValidationErrors } from "../middlewares/validate.middleware.js";
-import { createAuthor, getAuthors } from "../controllers/authors.controller.js";
+import { createAuthor, getAuthors, updateAuthor } from "../controllers/authors.controller.js";
 
 const authorsRouter = Router();
 
@@ -10,4 +10,8 @@ authorsRouter.get('/', getAuthors);
 
 // Endpoint POST para crear un autor
 authorsRouter.post('/', validationsCreateAuthor, managerValidationErrors, createAuthor);
+
+// Endpoint PUT para actualizar autor
+authorsRouter.put('/:id', validationsUpdateAuthor, managerValidationErrors, updateAuthor);
+
 export default authorsRouter;
