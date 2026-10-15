@@ -1,5 +1,5 @@
 import { AuthorService } from "../services/authors.services.js";
-import createAuthorDTO from "../dtos/createAuthor.dto.js";
+import createAuthorDTO from "../dtos/authors.dto.js";
 
 export async function createAuthor(req, res, next){
     try{

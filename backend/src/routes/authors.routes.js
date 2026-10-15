@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validationsCreateAuthor } from "../dtos/createAuthor.dto.js";
+import { validationsCreateAuthor } from "../dtos/authors.dto.js";
 import { managerValidationErrors } from "../middlewares/validate.middleware.js";
 import { createAuthor, getAuthors } from "../controllers/authors.controller.js";
 
