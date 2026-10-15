@@ -33,7 +33,7 @@ export async function updateAuthor(req, res, next){
     try{
         const { id } = req.params;
         const newData = new createAuthorDTO(req.body);
-        const updatedAuthor = await AuthorService.update({name_author: newData.name}, id);
+        const updatedAuthor = await AuthorService.update({name_author: newData.name.trim() === "" ? null: newData.name}, id);
         
         if(!updatedAuthor){
             return res.status(404).json({

@@ -24,6 +24,5 @@ export const validateId = [
 ];
 
 export const validationsUpdateAuthor = [
-    ...validationsCreateAuthor,
     ...validateId
 ];
