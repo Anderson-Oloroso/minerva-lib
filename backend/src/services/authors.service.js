@@ -30,4 +30,15 @@ export class AuthorService{
             name: data.name_author
         };
     }
+
+    static async delete(id){
+        const query = 'DELETE FROM authors WHERE id_author = ?';
+        const [ result ] = await Pool.execute(query, [id]);
+        
+        if(result.affectedRows === 0){
+            return null;
+        }
+
+        return result.affectedRows > 0;
+    }
 }

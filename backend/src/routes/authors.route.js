@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { validationsCreateAuthor, validationsUpdateAuthor } from "../dtos/authors.dto.js";
+import { validateId, validationsCreateAuthor} from "../dtos/authors.dto.js";
 import { managerValidationErrors } from "../middlewares/validate.middleware.js";
-import { createAuthor, getAuthors, updateAuthor } from "../controllers/authors.controller.js";
+import { createAuthor, deleteAuthor, getAuthors, updateAuthor } from "../controllers/authors.controller.js";
 
 const authorsRouter = Router();
 
@@ -12,6 +12,9 @@ authorsRouter.get('/', getAuthors);
 authorsRouter.post('/', validationsCreateAuthor, managerValidationErrors, createAuthor);
 
 // Endpoint PUT para actualizar autor
-authorsRouter.put('/:id', validationsUpdateAuthor, managerValidationErrors, updateAuthor);
+authorsRouter.put('/:id', validateId, managerValidationErrors, updateAuthor);
+
+// Endpoint DELETE para eliminar un autor
+authorsRouter.delete('/:id', validateId, managerValidationErrors, deleteAuthor);
 
 export default authorsRouter;

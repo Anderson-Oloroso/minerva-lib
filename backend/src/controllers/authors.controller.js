@@ -1,4 +1,4 @@
-import { AuthorService } from "../services/authors.services.js";
+import { AuthorService } from "../services/authors.service.js";
 import createAuthorDTO from "../dtos/authors.dto.js";
 
 export async function createAuthor(req, res, next){
@@ -45,6 +45,27 @@ export async function updateAuthor(req, res, next){
         res.status(200).json({
             status: 'Success',
             data: updatedAuthor
+        });
+
+    }catch(err){
+        next(err);
+    }
+}
+
+export async function deleteAuthor(req, res, next){
+    try{
+        const { id } = req.params;
+        const deletedAuthor = await AuthorService.delete(id);       
+        if(!deletedAuthor){
+            return res.status(404).json({
+                status: 'Fail',
+                message: 'Autor no encontrado'
+            });
+        }
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'Autor eliminado exitosamente'
         });
 
     }catch(err){
