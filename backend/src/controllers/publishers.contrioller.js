@@ -3,8 +3,8 @@ import { PublisherService } from '../services/publishers.service.js';
 
 export async function createPublisher(req, res, next){
     try{
-        const publisherDto = await CreatePublisherDto(req.body);
-        const newPublisher = new PublisherService.create({publisher: publisherDto.publisher});
+        const publisherDto = new CreatePublisherDto(req.body);
+        const newPublisher = await PublisherService.create({publisher: publisherDto.publisher});
 
         res.status(201).json({
             status: 'Success',

@@ -13,10 +13,9 @@ export default class CreatePublisherDto{
 export const validationsCreatePublisher = [
     body('publisher')
     .trim()
-    .isNumeric().withMessage('El nombre de la editorial no puede ser numérica')
     .notEmpty().withMessage('El nombre de la editorial no puede estar vacío')
     .isString().withMessage('El nombre de la editorial tiene que tener una cadena de texto válida')
-    .length({min: 4, max: 50}).withMessage('El nombre de la editorial tiene que ser mayor a 4 caracteres y menor a 50')
+    .isLength({min: 4, max: 50}).withMessage('El nombre de la editorial tiene que ser mayor a 4 caracteres y menor a 50')
 ];
 
 export const validatePublisherId = [
