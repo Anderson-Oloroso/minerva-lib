@@ -21,4 +21,17 @@ export class PublisherService{
         }));
     }
     
+    static async update(data, id){
+        const query = 'UPDATE publishers SET name_publisher = IFNULL(?, name_publisher) WHERE id_publisher = ?';
+        const [ result ] = await Pool.execute(query, [data.publisher, id]);
+
+        if(result.affectedRows === 0){
+            return null;
+        }
+
+        return {
+            id: id,
+            publisher: data.publisher
+        }
+    }
 }
