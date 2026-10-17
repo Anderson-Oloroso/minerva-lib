@@ -1,4 +1,4 @@
-import Pool from "../config/database";
+import Pool from "../config/database.js";
 
 export class PublisherService{
     static async create(data){
