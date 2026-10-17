@@ -13,6 +13,12 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/script/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
 
   backend:
     build: ./backend
@@ -23,7 +29,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules

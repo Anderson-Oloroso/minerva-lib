@@ -16,15 +16,13 @@ app.listen(PORT, () => {
   console.log(`Health Check disponible en http://localhost:${PORT}/api/minerva-lib/health`);
 });
 
-(
-  async ()=>{
-    try{
-      const connection = await Pool.getConnection();
-      console.log('Conexión con la base de datos exitosa! -> minerva_lib_db');
-      connection.release();
-    }catch(err){  
-      console.log('Error al conectarse con la base de datos minerva_lib_db', err.message);
-      process.exit(1);
-    }
+(async () => {
+  try {
+    const connection = await Pool.getConnection();
+    console.log('Conexión con la base de datos exitosa: minerva_lib_db');
+    connection.release();
+  } catch (err) {
+    console.error('Error al conectarse con la base de datos minerva_lib_db:', err.message);
+    process.exit(1);
   }
-)();
+})();
