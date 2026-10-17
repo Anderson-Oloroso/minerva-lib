@@ -13,7 +13,7 @@ const Pool = createPool({
     host: process.env.DB_HOST || 'db',
     port: process.env.DB_PORT || 3306,
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'secretpasssord',
+    password: process.env.DB_PASSWORD || 'secretpassword',
     database: process.env.DB_NAME || 'minerva_lib_db',
     waitForConnections: true,
     connectionLimit: 10
