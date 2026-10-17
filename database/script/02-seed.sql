@@ -1,5 +1,7 @@
 USE minerva_lib_db;
 
+START TRANSACTION;
+
 -- 1. Insertar Autores
 INSERT INTO authors (id_author, name_author) VALUES 
 (1, 'Gabriel García Márquez'),
@@ -48,3 +50,5 @@ INSERT INTO sales (id_sale, id_client, total) VALUES
 -- 9. Detalles de la Venta
 INSERT INTO sale_details (id_sale_details, id_sale, id_book, amount, unit_price) VALUES 
 (1, 1, 2, 1, 110.00);
+
+COMMIT;

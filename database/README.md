@@ -53,7 +53,7 @@ erDiagram
         INT id_book PK
         VARCHAR title
         VARCHAR isbn
-        YEAR year_publication
+        SMALLINT year_publication
         INT no_pages
         VARCHAR wrote_language
         DECIMAL price
@@ -141,7 +141,7 @@ Catálogo general de títulos disponibles tanto para préstamo como para venta.
 | `id_book` | `INT` | NO | **PK** | Identificador único autoincremental del libro. |
 | `title` | `VARCHAR(50)` | NO | - | Título de la obra. |
 | `isbn` | `VARCHAR(20)` | NO | - | Código internacional normalizado para libros. |
-| `year_publication` | `YEAR` | NO | - | Año en que se publicó la edición. |
+| `year_publication` | `SMALLINT UNSIGNED` | NO | - | Año de publicación (permite años históricos anteriores a 1901). |
 | `no_pages` | `INT` | NO | - | Número total de páginas. |
 | `wrote_language` | `VARCHAR(50)` | NO | - | Idioma original o de edición de la obra. |
 | `price` | `DECIMAL(6,2)` | NO | - | Precio unitario actual de venta (hasta 9,999.99). |
@@ -297,6 +297,7 @@ Al levantar el contenedor por primera vez, el motor ejecuta en orden alfabético
 2. `database/script/02-seed.sql`: Inserta los registros semilla para autores, editoriales, géneros, libros y clientes de prueba.
 
 `01-init.sql` elimina y vuelve a crear la base de datos. Los scripts de inicialización solo se ejecutan automáticamente cuando MySQL inicia con un directorio de datos vacío; no se debe volver a ejecutar este script en una base con datos que se quieran conservar.
+El campo de año usa `SMALLINT UNSIGNED` en lugar de `YEAR`, porque MySQL `YEAR` solo acepta años desde 1901 (además de valores especiales) y causaba que el seed fallara al insertar la publicación de *Don Quijote* en 1605. El seed se ejecuta dentro de una transacción para evitar que un error deje solo una parte de sus registros insertada.
 
 ### 7.2. Comandos Operativos
 
