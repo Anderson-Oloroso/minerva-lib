@@ -27,11 +27,11 @@ CREATE TABLE IF NOT EXISTS books(
     wrote_language VARCHAR(50) NOT NULL,
     price DECIMAL(6,2) NOT NULL,
     stock INT NOT NULL,
-    id_author INT NOT NULL,
-    id_publisher INT NOT NULL,
+    id_author INT NULL,
+    id_publisher INT NULL,
     id_genre INT NOT NULL,
-    FOREIGN KEY (id_author) REFERENCES authors(id_author) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (id_publisher) REFERENCES publishers(id_publisher) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (id_author) REFERENCES authors(id_author) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (id_publisher) REFERENCES publishers(id_publisher) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (id_genre) REFERENCES genres(id_genre) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 

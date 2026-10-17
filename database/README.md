@@ -22,8 +22,8 @@ El modelo de datos se encuentra documentado visualmente en los siguientes artefa
 
 ```mermaid
 erDiagram
-    authors ||--o{ books : "escribe (1:N)"
-    publishers ||--o{ books : "publica (1:N)"
+    authors o|--o{ books : "escribe (0..1:N)"
+    publishers o|--o{ books : "publica (0..1:N)"
     genres ||--o{ books : "clasifica (1:N)"
     
     clients ||--o{ loans : "solicita (1:N)"
@@ -58,8 +58,8 @@ erDiagram
         VARCHAR wrote_language
         DECIMAL price
         INT stock
-        INT id_author FK
-        INT id_publisher FK
+        INT id_author FK "NULL permitido"
+        INT id_publisher FK "NULL permitido"
         INT id_genre FK
     }
 
@@ -146,8 +146,8 @@ Catálogo general de títulos disponibles tanto para préstamo como para venta.
 | `wrote_language` | `VARCHAR(50)` | NO | - | Idioma original o de edición de la obra. |
 | `price` | `DECIMAL(6,2)` | NO | - | Precio unitario actual de venta (hasta 9,999.99). |
 | `stock` | `INT` | NO | - | Existencias físicas disponibles en almacén. |
-| `id_author` | `INT` | NO | **FK** | Referencia al autor (`authors.id_author`). |
-| `id_publisher` | `INT` | NO | **FK** | Referencia a la editorial (`publishers.id_publisher`). |
+| `id_author` | `INT` | SÍ | **FK** | Referencia opcional al autor (`authors.id_author`); `NULL` cuando no se conoce o no se registra. |
+| `id_publisher` | `INT` | SÍ | **FK** | Referencia opcional a la editorial (`publishers.id_publisher`); `NULL` cuando no se conoce o no se registra. |
 | `id_genre` | `INT` | NO | **FK** | Referencia al género (`genres.id_genre`). |
 
 ### 3.5. `clients` (Clientes y Lectores)
@@ -209,8 +209,8 @@ Entidad asociativa que desglosa los ítems vendidos en una transacción.
 
 | Entidad Origen | Entidad Destino | Tipo de Relación | Cardinalidad Origen:Destino | Participación (Min, Max) | Explicación del Vínculo |
 | :--- | :--- | :---: | :---: | :---: | :--- |
-| **authors** | **books** | 1 a N | `1 : N` | `(1,1)` a `(1,N)` | Un autor puede tener uno o muchos libros registrados; cada libro pertenece forzosamente a un único autor. |
-| **publishers** | **books** | 1 a N | `1 : N` | `(1,1)` a `(1,N)` | Una editorial puede publicar uno o muchos libros; cada libro es editado por una sola editorial. |
+| **authors** | **books** | 1 a N | `1 : N` | `(0,N)` a `(0,1)` | Un autor puede tener cero o muchos libros; cada libro puede tener cero o un autor registrado. |
+| **publishers** | **books** | 1 a N | `1 : N` | `(0,N)` a `(0,1)` | Una editorial puede publicar cero o muchos libros; cada libro puede tener cero o una editorial registrada. |
 | **genres** | **books** | 1 a N | `1 : N` | `(1,1)` a `(1,N)` | Un género literario puede agrupar múltiples libros; cada libro se clasifica bajo un género principal. |
 | **clients** | **loans** | 1 a N | `1 : N` | `(0,N)` a `(1,1)` | Un cliente puede tener cero, uno o múltiples préstamos en el tiempo; un préstamo corresponde a un único cliente. |
 | **loans** | **loan_details** | 1 a N | `1 : N` | `(1,N)` a `(1,1)` | Un préstamo agrupa uno o varios libros prestados; cada detalle pertenece exclusivamente a un préstamo. |
@@ -229,8 +229,8 @@ Entidad asociativa que desglosa los ítems vendidos en una transacción.
 ### 5.2. Integridad Referencial y Reglas de Cascada (`FOREIGN KEY`)
 | Clave Foránea | Tabla Referenciada | ON UPDATE | ON DELETE | Justificación de Negocio |
 | :--- | :--- | :---: | :---: | :--- |
-| `books(id_author)` | `authors(id_author)` | `CASCADE` | `CASCADE` | Si se elimina o actualiza un autor, se propagan los cambios a sus libros. |
-| `books(id_publisher)` | `publishers(id_publisher)` | `CASCADE` | `CASCADE` | Si cambia el ID de la editorial, se propaga a los libros asociados. |
+| `books(id_author)` | `authors(id_author)` | `CASCADE` | `SET NULL` | Si se elimina un autor, se conservan sus libros y se limpia su referencia; si cambia su ID, se actualiza la referencia. |
+| `books(id_publisher)` | `publishers(id_publisher)` | `CASCADE` | `SET NULL` | Si se elimina una editorial, se conservan sus libros y se limpia su referencia; si cambia su ID, se actualiza la referencia. |
 | `books(id_genre)` | `genres(id_genre)` | `CASCADE` | `RESTRICT` | **Protección de catálogo:** Evita eliminar un género literario si existen libros clasificados en él. |
 | `loans(id_client)` | `clients(id_client)` | `RESTRICT` | `RESTRICT` | Evita eliminar accidentalmente un cliente que tenga un historial de préstamos activo. |
 | `loan_details(id_loan)` | `loans(id_loan)` | `CASCADE` | `CASCADE` | Si se anula un préstamo, sus ítems desglosados se eliminan en cascada. |
@@ -272,6 +272,18 @@ Entidad asociativa que desglosa los ítems vendidos en una transacción.
    - El catálogo `books` es polivalente: los libros en existencia (`stock`) pueden destinarse tanto para venta comercial como para préstamo en sala o a domicilio.
 6. **Límite Monetario:**
    - Los campos de tipo monetario (`price`, `total`, `unit_price`) utilizan el tipo `DECIMAL(6,2)`, soportando cifras de hasta Q 9,999.99 (nueve mil novecientos noventa y nueve con noventa y nueve centavos).
+7. **Autoría y editorial desconocidas:**
+   - `books.id_author` e `id_publisher` admiten `NULL` cuando no se cuenta con ese dato. `NULL` significa “sin dato registrado”; no se debe insertar un autor o editorial ficticios para cubrir ese caso.
+   - Si la obra está identificada explícitamente como anónima, se registra un autor con `name_author = 'Anónimo'` y se asigna su `id_author` al libro. Así se distingue una autoría anónima conocida de una autoría desconocida.
+
+   ```sql
+   -- Si la obra es explícitamente anónima:
+   INSERT INTO authors (name_author) VALUES ('Anónimo');
+   -- Usar el id_author generado al registrar el libro.
+
+   -- Si no se conoce el autor o la editorial, usar NULL en la referencia
+   -- correspondiente al registrar el libro.
+   ```
 
 ---
 
@@ -283,6 +295,8 @@ La base de datos se despliega automáticamente mediante Docker Compose:
 Al levantar el contenedor por primera vez, el motor ejecuta en orden alfabético los scripts montados en `/docker-entrypoint-initdb.d/`:
 1. `database/script/01-init.sql`: Crea la base de datos `minerva_lib_db` y las 9 tablas con sus claves primarias, foráneas, índices y restricciones `CHECK`.
 2. `database/script/02-seed.sql`: Inserta los registros semilla para autores, editoriales, géneros, libros y clientes de prueba.
+
+`01-init.sql` elimina y vuelve a crear la base de datos. Los scripts de inicialización solo se ejecutan automáticamente cuando MySQL inicia con un directorio de datos vacío; no se debe volver a ejecutar este script en una base con datos que se quieran conservar.
 
 ### 7.2. Comandos Operativos
 
@@ -307,4 +321,3 @@ Al levantar el contenedor por primera vez, el motor ejecuta en orden alfabético
   docker compose down -v
   docker compose up -d db
   ```
-
