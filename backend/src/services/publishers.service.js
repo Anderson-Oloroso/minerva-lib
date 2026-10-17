@@ -10,4 +10,15 @@ export class PublisherService{
             publisher: data.publisher
         }
     }
+
+    static async list(){
+        const query = 'SELECT id_publisher, name_publisher FROM publishers';
+        const [ rows ] = await Pool.execute(query);
+
+        return rows.map(row=>({
+            id: row.id_publisher,
+            publisher: row.name_publisher
+        }));
+    }
+    
 }

@@ -15,3 +15,24 @@ export async function createPublisher(req, res, next){
         next(err);
     }
 }
+
+export async function listPublishers(req, res, next){
+    try{
+        const publishers = await PublisherService.list();
+        
+        if(!publishers || publishers === 0){
+            res.status(200).json({
+            status: 'Success',
+            message: 'Aun no hay editoriales en la base de datos',
+        });
+        }
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'Editoriales en la base de datos',
+            data: publishers
+        });
+    }catch(err){
+        next(err);
+    }
+}
