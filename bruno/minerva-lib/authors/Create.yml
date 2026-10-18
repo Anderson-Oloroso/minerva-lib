@@ -10,7 +10,7 @@ http:
     type: json
     data: |-
       {
-        "name_author":"Julio Verne"
+        "name":"Alejandro Dumas"
       }
   auth: inherit
 

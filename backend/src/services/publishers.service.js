@@ -31,7 +31,7 @@ export class PublisherService{
 
         return {
             id: id,
-            publisher: data.publisher
+            publisher: data.publisher === null ? '[AVISO]: Editorial no modificada' : data.publisher
         }
     }
 }

@@ -44,7 +44,7 @@ export async function updateAuthor(req, res, next){
 
         res.status(200).json({
             status: 'Success',
-            data: updatedAuthor !== null ? updateAuthor : 'Datos conservados'
+            data: updatedAuthor
         });
 
     }catch(err){

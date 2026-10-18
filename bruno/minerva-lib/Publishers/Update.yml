@@ -10,7 +10,7 @@ http:
     type: json
     data: |-
       {
-        "publisher": "Editorial Piedra Santa"
+        "publisher": ""
       }
   auth: inherit
 
