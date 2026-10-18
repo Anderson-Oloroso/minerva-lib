@@ -27,7 +27,7 @@ export class AuthorService{
 
         return {
             id: id,
-            name: data.name_author
+            name: data.name_author === null ? '[AVISO]: Autor no modificado' : data.name_author
         };
     }
 
