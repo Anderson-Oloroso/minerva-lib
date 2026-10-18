@@ -34,4 +34,15 @@ export class PublisherService{
             publisher: data.publisher === null ? '[AVISO]: Editorial no modificada' : data.publisher
         }
     }
+
+    static async delete(id){
+        const query = 'DELETE FROM publishers WHERE id_publisher = ?';
+        const [ result ] = await Pool.execute(query, [id]);
+
+        if(result.affectedRows === 0){
+            return null
+        }
+
+        return result.affectedRows > 0;
+    }
 }

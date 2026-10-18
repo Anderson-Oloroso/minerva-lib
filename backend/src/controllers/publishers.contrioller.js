@@ -51,11 +51,33 @@ export async function updatePublisher(req, res, next){
                 message: 'Editorial no encontrada'
             });
         }
-
+        
         res.status(200).json({
             status: 'Success',
             message: 'Editorial actualizada correctamente',
             data: updatedPublisher
+        });
+
+    }catch(err){
+        next(err);
+    }
+}
+
+export async function deletePublisher(req, res, next){
+    try{
+        const { id } = req.params;
+        const deletedPublisher = await PublisherService.delete(id);
+
+        if(!deletedPublisher){
+            res.status(404).json({
+                status: 'Fail',
+                message: 'El id no ha sido encontrado'
+            });
+        }
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'Editorial eliminada exitosamente'
         });
     }catch(err){
         next(err);
