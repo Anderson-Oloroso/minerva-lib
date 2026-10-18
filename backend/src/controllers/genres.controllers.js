@@ -4,7 +4,7 @@ import { GenreService } from '../services/genres.service.js';
 export async function createGenre(req, res, next){
     try{
         const genreDto = new CreateGenreDto(req.body);
-        const newGenre = await GenreService.create({publisher: genreDto.publisher});
+        const newGenre = await GenreService.create({genre: genreDto.genre});
 
         res.status(201).json({
             status: 'Success',
@@ -18,9 +18,9 @@ export async function createGenre(req, res, next){
 
 export async function listGenres(req, res, next){
     try{
-        const publishers = await GenreService.list();
+        const genres = await GenreService.list();
         
-        if(!publishers || publishers === 0){
+        if(!genres || genres === 0){
             res.status(200).json({
             status: 'Success',
             total: 0,
@@ -30,9 +30,9 @@ export async function listGenres(req, res, next){
 
         res.status(200).json({
             status: 'Success',
-            total: publishers.length,
+            total: genres.length,
             message: 'Generos en la base de datos',
-            data: publishers
+            data: genres
         });
     }catch(err){
         next(err);
@@ -43,9 +43,9 @@ export async function updateGenre(req, res, next){
     try{
         const { id } = req.params;
         const newGenre = new CreateGenreDto(req.body);
-        const updatedPublisher = await GenreService.update({publisher: newGenre.publisher.trim() !== '' ? newGenre.publisher : null}, id);
+        const updatedGenre = await GenreService.update({genre: newGenre.genre.trim() !== '' ? newGenre.genre : null}, id);
 
-        if(!updatedPublisher){
+        if(!updatedGenre){
             res.status(404).json({
                 status: 'Fail',
                 message: 'Genero no encontrada'
@@ -55,7 +55,7 @@ export async function updateGenre(req, res, next){
         res.status(200).json({
             status: 'Success',
             message: 'Genero actualizado correctamente',
-            data: updatedPublisher
+            data: updatedGenre
         });
 
     }catch(err){
@@ -66,9 +66,9 @@ export async function updateGenre(req, res, next){
 export async function deleteGenre(req, res, next){
     try{
         const { id } = req.params;
-        const deletedPublisher = await GenreService.delete(id);
+        const deletedGenre = await GenreService.delete(id);
 
-        if(!deletedPublisher){
+        if(!deletedGenre){
             res.status(404).json({
                 status: 'Fail',
                 message: 'El id no ha sido encontrado'
@@ -77,7 +77,7 @@ export async function deleteGenre(req, res, next){
 
         res.status(200).json({
             status: 'Success',
-            message: 'Genero eliminada exitosamente'
+            message: 'Genero eliminado exitosamente'
         });
     }catch(err){
         next(err);

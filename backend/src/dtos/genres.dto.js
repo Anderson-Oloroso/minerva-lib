@@ -11,7 +11,7 @@ export default class CreateGenreDto{
 }
 
 export const validationsCreateGenre = [
-    body('publisher')
+    body('genre')
     .trim()
     .notEmpty().withMessage('El nombre el genero no puede estar vacío')
     .isString().withMessage('El nombre el genero tiene que tener una cadena de texto válida')
