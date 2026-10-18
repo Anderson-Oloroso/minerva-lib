@@ -22,6 +22,7 @@ export async function getAuthors(req, res, next){
         res.status(200).json({
             status: 'Success',
             total: authors.length,
+            message: 'Autores en la base de datos',
             data:authors
         });
     }catch(err){
@@ -44,6 +45,7 @@ export async function updateAuthor(req, res, next){
 
         res.status(200).json({
             status: 'Success',
+            message: 'Editorial modificada correctamente',
             data: updatedAuthor
         });
 

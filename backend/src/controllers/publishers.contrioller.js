@@ -23,12 +23,14 @@ export async function listPublishers(req, res, next){
         if(!publishers || publishers === 0){
             res.status(200).json({
             status: 'Success',
+            total: 0,
             message: 'Aun no hay editoriales en la base de datos',
         });
         }
 
         res.status(200).json({
             status: 'Success',
+            total: publishers.length,
             message: 'Editoriales en la base de datos',
             data: publishers
         });
