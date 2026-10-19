@@ -3,10 +3,12 @@ import cors from 'cors';
 import { errorHandler } from './middlewares/error.middleware.js';
 import apiRouter from './routes/index.js';
 import cookieSession from 'cookie-session';
+import { logger } from './middlewares/logger.js';
 
 const app = express();
 
 // Middlewares globales
+app.use(logger);
 app.use(cors());
 app.use(express.json());
 
