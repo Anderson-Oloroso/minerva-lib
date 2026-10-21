@@ -1,29 +1,39 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:8.0
     container_name: minerva_mysql
     restart: always
+    env_file:
+      - .env
     environment:
-      MYSQL_DATABASE: minerva_lib_db
-      MYSQL_ROOT_PASSWORD: secretpassword
+      MYSQL_DATABASE: ${DB_NAME:-minerva_lib_db}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secretpassword}
     ports:
-      - "3306:3306"
+      - "3307:${DB_PORT:-3306}"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/script/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping --protocol=TCP -h 127.0.0.1 -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
 
   backend:
     build: ./backend
     container_name: minerva_backend
     restart: always
     ports:
-      - "5000:5000"
+      - "${PORT:-5000}:${PORT:-5000}"
     env_file:
-      - ./backend/.env
+      - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
 
 volumes:
   mysql_data:

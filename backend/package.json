@@ -1,0 +1,46 @@
+{
+  "name": "minerva-lib-backend",
+  "version": "1.0.0",
+  "description": "Backend of project minerva-lib, bases on node.js and mysql connected with a frontend as a fullstack application",
+  "keywords": [
+    "minerva-lib",
+    "backend",
+    "node.js",
+    "mysql",
+    "express",
+    "express-validator",
+    "books",
+    "library",
+    "sales",
+    "loans"
+  ],
+  "homepage": "https://github.com/Anderson-Oloroso/minerva-lib#readme",
+  "bugs": {
+    "url": "https://github.com/Anderson-Oloroso/minerva-lib/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anderson-Oloroso/minerva-lib.git"
+  },
+  "license": "ISC",
+  "author": "Anderson-Oloroso",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon -L src/server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cookie-session": "^2.1.1",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "express-validator": "^7.3.2",
+    "mysql2": "^3.24.6"
+  }
+}
