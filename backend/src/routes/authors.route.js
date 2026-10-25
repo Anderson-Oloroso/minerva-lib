@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { validateId, validationsCreateAuthor} from "../dtos/authors.dto.js";
 import { managerValidationErrors } from "../middlewares/validate.middleware.js";
-import { createAuthor, deleteAuthor, getAuthors, updateAuthor } from "../controllers/authors.controller.js";
 
 const authorsRouter = Router();
 
