@@ -7,7 +7,7 @@ export default class AuthorModel{
 
     async list(){
         const query = 'SELECT id_author AS id, name_author AS name FROM authors ORDER BY id_author ASC';
-        const [ rows ] = await this.$db.execute(query);
+        const [ rows ] = await this.#db.execute(query);
         return rows;
     }
 
@@ -27,15 +27,18 @@ export default class AuthorModel{
     }
 
     async update(author, id){
-        const query = 'UPDATE authors SET name_author = IFNULL(?, name_author) WHERE id = ?';
-        const [ result] = await this.#db.execute(query, [author.name]);
+        const query = 'UPDATE authors SET name_author = IFNULL(?, name_author) WHERE id_author = ?';
+        const [ result] = await this.#db.execute(query, [author.name, id]);
 
         if(result.affectedRows === 0) return null;
-        
+        return {
+            id: id,
+            name: author.name
+        }
     }
 
     async delete(id){
-        const query = 'DELETE froms WHERE id_author = ?';
+        const query = 'DELETE from WHERE id_author = ?';
         const [ result ] = await this.#db.execute(query, [id]);
 
         return await result.affectedRows > 0;
