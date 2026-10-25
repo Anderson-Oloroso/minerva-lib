@@ -10,6 +10,7 @@ export default class AuthorController{
         this.getAll = this.getAll.bind(this);
         this.getById = this.getById.bind(this);
         this.create = this.create.bind(this);
+        this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
     }
 
@@ -33,7 +34,7 @@ export default class AuthorController{
 
             if(!author){
                 return res.status(404).json({
-                    status: 'Success',
+                    status: 'Fail',
                     message: 'Autor no encontrado'
                 });
             }
@@ -52,7 +53,7 @@ export default class AuthorController{
             const authorDto = new createAuthorDTO(req.body);
             const newAuthor = await this.#authorModel.create({ name: authorDto.name });
 
-            req.status(201).json({
+            res.status(201).json({
                 status: 'Success',
                 message: 'Autor creado exitosamente',
                 data: newAuthor
@@ -71,7 +72,7 @@ export default class AuthorController{
             const updatedAuthor = await this.#authorModel.update({ name: newValue}, id);
 
             if(!updatedAuthor){
-                return res.status(200).json({
+                return res.status(404).json({
                     status: 'Fail',
                     message: 'Autor no encontrado'
                 });
@@ -100,8 +101,9 @@ export default class AuthorController{
             }
 
             res.status(200).json({
-                ststus: 'Success',
-                message: 'Autor no encontrado'
+                status: 'Success',
+                message: 'Autor eliminado correctamente',
+                data: wasDeleted
             });
         }catch(err){
             next(err);
