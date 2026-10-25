@@ -38,7 +38,7 @@ export default class AuthorModel{
     }
 
     async delete(id){
-        const query = 'DELETE authors from WHERE id_author = ?';
+        const query = 'DELETE FROM authors WHERE id_author = ?';
         const [ result ] = await this.#db.execute(query, [id]);
 
         return result.affectedRows > 0;
