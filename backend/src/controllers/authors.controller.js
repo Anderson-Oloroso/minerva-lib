@@ -103,7 +103,6 @@ export default class AuthorController{
             res.status(200).json({
                 status: 'Success',
                 message: 'Autor eliminado correctamente',
-                data: wasDeleted
             });
         }catch(err){
             next(err);
