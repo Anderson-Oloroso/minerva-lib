@@ -1,4 +1,4 @@
-import createAuthorDTO from "../dtos/authors.dto.js";
+import createAuthorDTO from "../dtos/author.dto.js";
 
 export default class AuthorController{
     #authorModel

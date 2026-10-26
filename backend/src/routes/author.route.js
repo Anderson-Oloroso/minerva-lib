@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { managerValidationErrors } from "../middlewares/validate.middleware.js";
 import { requireAdmin, requireAuth } from '../middlewares/auth.middleware.js'
-import { validateCreateAuthor } from "../validators/authors.validator.js";
+import { validateCreateAuthor } from "../validators/author.validator.js";
 import { validateId } from "../validators/common.validator.js";
 
 import Pool from "../config/database.js";
 import AuthorModel from "../models/author.model.js";
-import AuthorController from "../controllers/authors.controller.js";
+import AuthorController from "../controllers/author.controller.js";
 
 const authorModel = new AuthorModel(Pool);
 const authorController = new AuthorController(authorModel);
