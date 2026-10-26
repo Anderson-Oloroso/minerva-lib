@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export default class AuthService {
     #clientModel;
@@ -30,17 +31,22 @@ export default class AuthService {
 
     async login(email, password) {
         const client = await this.#clientModel.findByEmail(email);
-
         if (!client) return null;
 
         const isValid = await bcrypt.compare(password, client.password);
         if (!isValid) return null;
 
-        return {
+        const user = {
             id: client.id_client,
             name: client.name_client,
             email: client.email,
             role: client.role
         };
+
+        const token = jwt.sign(user, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRATION || '10min'
+        });
+
+        return { user, token };
     }
 }

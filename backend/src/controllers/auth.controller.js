@@ -6,9 +6,9 @@ export default class AuthController {
     constructor(authService) {
         this.#authService = authService;
         this.register = this.register.bind(this);
-        this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this);
-        this.profile = this.profile.bind(this);
+        this.login    = this.login.bind(this);
+        this.logout   = this.logout.bind(this);
+        this.profile  = this.profile.bind(this);
     }
 
     async register(req, res, next) {
@@ -36,21 +36,29 @@ export default class AuthController {
     async login(req, res, next) {
         try {
             const { email, password } = req.body;
-            const client = await this.#authService.login(email, password);
+            const result = await this.#authService.login(email, password);
 
-            if (!client) {
+            if (!result) {
                 return res.status(401).json({
                     status: 'Fail',
                     message: 'El correo o la contraseña son incorrectos'
                 });
             }
 
-            req.session.user = client;
+            res.cookie('access_token', result.token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 10 * 60 * 1000
+            });
 
             res.status(200).json({
                 status: 'Success',
                 message: 'Inicio de sesión exitoso',
-                data: client
+                data: {
+                    ...result.user,
+                    jwt: result.token
+                }
             });
         } catch (err) {
             next(err);
@@ -59,7 +67,7 @@ export default class AuthController {
 
     async logout(req, res, next) {
         try {
-            req.session = null;
+            res.clearCookie('access_token');
             res.status(200).json({
                 status: 'Success',
                 message: 'Sesión cerrada exitosamente'
@@ -73,7 +81,7 @@ export default class AuthController {
         try {
             res.status(200).json({
                 status: 'Success',
-                data: req.session.user
+                data: req.user
             });
         } catch (err) {
             next(err);
