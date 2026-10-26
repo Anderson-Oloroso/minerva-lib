@@ -1,19 +1,21 @@
 import { Router } from "express";
 import { validateId, validationsCreateAuthor} from "../dtos/authors.dto.js";
 import { managerValidationErrors } from "../middlewares/validate.middleware.js";
+import { requireAdmin, requireAuth } from '../middlewares/auth.middleware.js'
+
+import Pool from "../config/database.js";
+import AuthorModel from "../models/author.model.js";
+import AuthorController from "../controllers/authors.controller.js";
+
+const authorModel = new AuthorModel(Pool);
+const authorController = new AuthorController(authorModel);
 
 const authorsRouter = Router();
 
-// Endpoint GET para listar autores
-authorsRouter.get('/', getAuthors);
-
-// Endpoint POST para crear un autor
-authorsRouter.post('/', validationsCreateAuthor, managerValidationErrors, createAuthor);
-
-// Endpoint PUT para actualizar autor
-authorsRouter.put('/:id', validateId, managerValidationErrors, updateAuthor);
-
-// Endpoint DELETE para eliminar un autor
-authorsRouter.delete('/:id', validateId, managerValidationErrors, deleteAuthor);
+authorsRouter.get('/', requireAuth, authorController.getAll);
+authorsRouter.get('/:id', requireAuth, validateId, managerValidationErrors, authorController.getById);
+authorsRouter.post('/', requireAuth, requireAdmin, validationsCreateAuthor, managerValidationErrors, authorController.create);
+authorsRouter.put('/:id', requireAuth, requireAdmin, validateId, managerValidationErrors, authorController.update);
+authorsRouter.delete('/:id', requireAuth, requireAdmin, validateId, managerValidationErrors, authorController.delete);
 
 export default authorsRouter;
