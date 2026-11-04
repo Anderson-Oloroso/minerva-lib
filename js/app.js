@@ -859,22 +859,14 @@ function openLoanModal(preselectedBookId = null) {
                             ${bookOptions}
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Estado Físico de Salida *</label>
-                        <select id="ml-state" class="form-control" required>
-                            <option value="Excelente" selected>Excelente</option>
-                            <option value="Regular">Regular</option>
-                            <option value="Maltratado">Maltratado</option>
-                        </select>
-                    </div>
                 </div>
+                <p style="color:var(--text-secondary); font-size:0.88rem;">El personal confirmará la disponibilidad y el estado del libro al preparar la entrega.</p>
             </form>
         `,
-        confirmText: 'Confirmar Préstamo',
+        confirmText: 'Solicitar Préstamo',
         onConfirm: async () => {
             const dateVal = document.getElementById('ml-return-date').value;
             const bookId = document.getElementById('ml-book').value;
-            const stateOut = document.getElementById('ml-state').value;
 
             if (!dateVal || !bookId) {
                 Toast.error('Por favor selecciona la fecha y el libro');
@@ -889,14 +881,13 @@ function openLoanModal(preselectedBookId = null) {
                     expected_return_date: isoDate,
                     details: [
                         {
-                            id_book: Number(bookId),
-                            state_book_out: stateOut
+                            id_book: Number(bookId)
                         }
                     ]
                 };
 
                 const res = await window.api.loans.create(payload);
-                Toast.success(`¡Préstamo #${res.data.id_loan} creado con éxito!`);
+                Toast.success(`Solicitud de préstamo #${res.data.id_loan} enviada. Espera la aprobación del personal.`);
                 Modal.close();
                 await reloadAllData();
             } catch (err) {
@@ -908,41 +899,118 @@ function openLoanModal(preselectedBookId = null) {
 
 window.quickLoan = (bookId) => openLoanModal(bookId);
 
-window.openReturnLoanModal = function(loanId, detailId = 1) {
+window.requestLoanReturn = function(loanId) {
+    Modal.open({
+        title: `Solicitar devolución del préstamo #${loanId}`,
+        body: '<p>Se notificará al personal para que reciba el libro y verifique su estado físico. La devolución no se completará hasta que sea revisada.</p>',
+        confirmText: 'Enviar solicitud',
+        onConfirm: async () => {
+            try {
+                await window.api.loans.requestReturn(loanId);
+                Toast.success('Solicitud de devolución enviada al personal.');
+                Modal.close();
+                await reloadAllData();
+            } catch (err) {
+                Toast.error(err.message || 'Error al solicitar la devolución');
+            }
+        }
+    });
+};
+
+window.approveLoan = function(loanId) {
+    const loan = appState.loans.find(item => Number(item.id_loan) === Number(loanId));
+    if (!loan) return;
+
+    const detailFields = (loan.details || []).map(detail => {
+        const book = appState.books.find(item => Number(item.id) === Number(detail.id_book));
+        return `
+            <div class="form-group">
+                <label class="form-label" for="loan-out-state-${detail.id_loan_detail}">${BookCover.escapeAttribute(book?.title || `Libro #${detail.id_book}`)}: estado al entregar *</label>
+                <select id="loan-out-state-${detail.id_loan_detail}" class="form-control" required>
+                    <option value="Excelente" selected>Excelente</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Maltratado">Maltratado</option>
+                </select>
+            </div>`;
+    }).join('');
+
+    Modal.open({
+        title: `Aprobar préstamo #${loanId}`,
+        body: `<p>Confirma que entregas estos libros y registra su estado físico.</p>${detailFields}`,
+        confirmText: 'Aprobar y registrar entrega',
+        onConfirm: async () => {
+            try {
+                const details = (loan.details || []).map(detail => ({
+                    id_loan_detail: detail.id_loan_detail,
+                    state_book_out: document.getElementById(`loan-out-state-${detail.id_loan_detail}`).value
+                }));
+                await window.api.loans.approve(loanId, details);
+                Toast.success(`Préstamo #${loanId} aprobado; existencias actualizadas.`);
+                Modal.close();
+                await reloadAllData();
+            } catch (err) {
+                Toast.error(err.message || 'Error al aprobar el préstamo');
+            }
+        }
+    });
+};
+
+window.openReturnLoanModal = function(loanId) {
+    const loan = appState.loans.find(item => Number(item.id_loan) === Number(loanId));
+    if (!loan) return;
+
+    const detailFields = (loan.details || []).map(detail => {
+        const book = appState.books.find(item => Number(item.id) === Number(detail.id_book));
+        return `
+            <div class="form-group">
+                <label class="form-label" for="loan-in-state-${detail.id_loan_detail}">${BookCover.escapeAttribute(book?.title || `Libro #${detail.id_book}`)}: estado recibido *</label>
+                <select id="loan-in-state-${detail.id_loan_detail}" class="form-control" required>
+                    <option value="Excelente" selected>Excelente</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Maltratado">Maltratado</option>
+                </select>
+            </div>`;
+    }).join('');
+
     Modal.open({
         title: `Devolución de Préstamo #${loanId}`,
         body: `
-            <form id="modal-return-loan-form">
-                <p style="margin-bottom:1rem; color:var(--text-secondary); font-size:0.92rem;">
-                    Indica el estado físico en que el usuario está entregando el libro para procesar la devolución en el sistema (sp_return_loan).
-                </p>
-                <div class="form-group">
-                    <label class="form-label" for="mr-state">Estado Físico de Entrada *</label>
-                    <select id="mr-state" class="form-control" required>
-                        <option value="Excelente" selected>Excelente</option>
-                        <option value="Regular">Regular</option>
-                        <option value="Maltratado">Maltratado</option>
-                    </select>
-                </div>
-            </form>
+            <p style="margin-bottom:1rem; color:var(--text-secondary); font-size:0.92rem;">Verifica el estado físico de todos los libros recibidos para completar la devolución.</p>
+            ${detailFields}
         `,
         confirmText: 'Registrar Devolución',
         onConfirm: async () => {
-            const stateIn = document.getElementById('mr-state').value;
             try {
-                const details = [
-                    {
-                        id_loan_detail: Number(detailId),
-                        state_book_in: stateIn
-                    }
-                ];
+                const details = (loan.details || []).map(detail => ({
+                    id_loan_detail: detail.id_loan_detail,
+                    state_book_in: document.getElementById(`loan-in-state-${detail.id_loan_detail}`).value
+                }));
                 await window.api.loans.returnLoan(loanId, details);
 
-                Toast.success(`¡Préstamo #${loanId} devuelto y registrado exitosamente!`);
+                Toast.success(`Devolución del préstamo #${loanId} verificada; existencias actualizadas.`);
                 Modal.close();
                 await reloadAllData();
             } catch (err) {
                 Toast.error(err.message || 'Error al procesar la devolución');
+            }
+        }
+    });
+};
+
+window.rejectLoan = function(loanId) {
+    Modal.open({
+        title: `Rechazar préstamo #${loanId}`,
+        body: '<p>¿Confirmas que deseas rechazar esta solicitud de préstamo?</p>',
+        confirmText: 'Rechazar solicitud',
+        confirmClass: 'btn-danger',
+        onConfirm: async () => {
+            try {
+                await window.api.loans.reject(loanId);
+                Toast.warning(`Solicitud de préstamo #${loanId} rechazada.`);
+                Modal.close();
+                await reloadAllData();
+            } catch (err) {
+                Toast.error(err.message || 'Error al rechazar el préstamo');
             }
         }
     });
@@ -964,7 +1032,7 @@ function openSaleModal() {
     `).join('');
 
     Modal.open({
-        title: 'Registrar Nueva Venta',
+        title: 'Solicitar Compra',
         body: `
             <form id="modal-sale-form">
                 <div class="form-row">
@@ -985,9 +1053,10 @@ function openSaleModal() {
                     <span style="font-weight:700;">Total de la Venta:</span>
                     <span id="ms-total" style="font-size:1.5rem; font-weight:800; color:var(--brand-blue);">Q0.00</span>
                 </div>
+                <p style="margin-top:0.75rem; color:var(--text-secondary); font-size:0.88rem;">La compra quedará pendiente hasta que el personal verifique el pago. El inventario se actualizará al confirmarse.</p>
             </form>
         `,
-        confirmText: 'Completar Venta',
+        confirmText: 'Enviar solicitud de compra',
         onConfirm: async () => {
             const bookId = document.getElementById('ms-book').value;
             const amount = document.getElementById('ms-amount').value;
@@ -1006,7 +1075,7 @@ function openSaleModal() {
                 ];
 
                 const res = await window.api.sales.create(details);
-                Toast.success(`¡Venta #${res.data.id_sale} registrada! Total: ${Format.currency(res.data.total)}`);
+                Toast.success(`Solicitud de compra #${res.data.id_sale} enviada por ${Format.currency(res.data.total)}. Pendiente de verificación del pago.`);
                 Modal.close();
                 await reloadAllData();
             } catch (err) {
@@ -1039,14 +1108,31 @@ function renderLoans() {
 
     const loans = appState.loans;
     if (loans.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4" style="color:var(--text-muted);">Aún no tienes préstamos registrados. Haz clic en "Nuevo Préstamo".</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4" style="color:var(--text-muted);">No hay solicitudes de préstamo registradas.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = loans.map(l => {
-        const detailId = l.details?.[0]?.id_loan_detail || 1;
         const isCurrentUsersLoan = Number(l.id_user) === Number(appState.currentUser?.id_user);
-        const isReturned = l.state_loan === 'devuelto' || Boolean(l.return_date);
+        let actions = '—';
+
+        if (Session.isAdmin() && l.state_loan === 'pendiente') {
+            actions = `
+                <button class="btn btn-primary btn-sm" onclick="approveLoan(${l.id_loan})">Aprobar entrega</button>
+                <button class="btn btn-danger btn-sm" onclick="rejectLoan(${l.id_loan})">Rechazar</button>`;
+        } else if (Session.isAdmin() && l.state_loan === 'devolucion_solicitada') {
+            actions = `<button class="btn btn-primary btn-sm" onclick="openReturnLoanModal(${l.id_loan})">Verificar devolución</button>`;
+        } else if (!Session.isAdmin() && l.state_loan === 'activo' && isCurrentUsersLoan) {
+            actions = `<button class="btn btn-secondary btn-sm" onclick="requestLoanReturn(${l.id_loan})">Solicitar devolución</button>`;
+        } else if (l.state_loan === 'pendiente') {
+            actions = 'Esperando aprobación del personal';
+        } else if (l.state_loan === 'devolucion_solicitada') {
+            actions = 'Esperando verificación de devolución';
+        } else if (l.state_loan === 'rechazado') {
+            actions = '—';
+        } else if (l.state_loan === 'devuelto' || l.return_date) {
+            actions = '<span style="color:var(--success); font-weight:700;">✓ Completado</span>';
+        }
 
         return `
             <tr>
@@ -1056,13 +1142,7 @@ function renderLoans() {
                 <td>${Format.date(l.expected_return_date)}</td>
                 <td>${Format.date(l.return_date)}</td>
                 <td>${Format.loanStateBadge(l.state_loan || (l.return_date ? 'devuelto' : 'activo'))}</td>
-                <td>
-                    ${isCurrentUsersLoan && !isReturned ? `
-                        <button class="btn btn-primary btn-sm" onclick="openReturnLoanModal(${l.id_loan}, ${detailId})">
-                            Devolver Libro
-                        </button>
-                    ` : isReturned ? '<span style="color:var(--success); font-weight:700;">✓ Completado</span>' : '—'}
-                </td>
+                <td>${actions}</td>
             </tr>
         `;
     }).join('');
@@ -1074,26 +1154,71 @@ function renderSales() {
 
     const sales = appState.sales;
     if (sales.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4" style="color:var(--text-muted);">Aún no tienes ventas registradas. Haz clic en "Nueva Venta".</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4" style="color:var(--text-muted);">No hay solicitudes de compra ni ventas registradas.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = sales.map(s => {
+        let actions = '—';
+        if (Session.isAdmin() && s.state_sale === 'pendiente_pago') {
+            actions = `
+                <button class="btn btn-primary btn-sm" onclick="confirmSale(${s.id_sale})">Confirmar pago</button>
+                <button class="btn btn-danger btn-sm" onclick="rejectSale(${s.id_sale})">Rechazar</button>`;
+        } else if (s.state_sale === 'pendiente_pago') {
+            actions = 'Esperando verificación del pago';
+        } else if (s.state_sale === 'confirmada') {
+            actions = '<span style="color:var(--success); font-weight:700;">✓ Registrada</span>';
+        }
+
         return `
             <tr>
                 <td><strong>#${s.id_sale}</strong></td>
                 <td>${BookCover.escapeAttribute(s.user_name || (Number(s.id_user) === Number(appState.currentUser?.id_user) ? 'Mi cuenta' : `Usuario #${s.id_user}`))}</td>
                 <td>${Format.date(s.date_sale)}</td>
                 <td><strong style="color:var(--brand-blue); font-size:1.05rem;">${Format.currency(s.total)}</strong></td>
-                <td>
-                    <button class="btn btn-ghost btn-sm" onclick="Toast.info('Venta #${s.id_sale} verificada en base de datos.')">
-                        Ver Detalle
-                    </button>
-                </td>
+                <td>${Format.saleStateBadge(s.state_sale)}</td>
+                <td>${actions}</td>
             </tr>
         `;
     }).join('');
 }
+
+window.confirmSale = function(saleId) {
+    Modal.open({
+        title: `Confirmar pago de compra #${saleId}`,
+        body: '<p>Confirma únicamente después de verificar que recibiste el pago. Al confirmar, la venta quedará registrada y se descontará el inventario.</p>',
+        confirmText: 'Pago verificado',
+        onConfirm: async () => {
+            try {
+                await window.api.sales.confirm(saleId);
+                Toast.success(`Pago verificado. Venta #${saleId} registrada.`);
+                Modal.close();
+                await reloadAllData();
+            } catch (err) {
+                Toast.error(err.message || 'Error al confirmar el pago');
+            }
+        }
+    });
+};
+
+window.rejectSale = function(saleId) {
+    Modal.open({
+        title: `Rechazar compra #${saleId}`,
+        body: '<p>¿Confirmas que deseas rechazar esta solicitud? No se descontará inventario.</p>',
+        confirmText: 'Rechazar solicitud',
+        confirmClass: 'btn-danger',
+        onConfirm: async () => {
+            try {
+                await window.api.sales.reject(saleId);
+                Toast.warning(`Solicitud de compra #${saleId} rechazada.`);
+                Modal.close();
+                await reloadAllData();
+            } catch (err) {
+                Toast.error(err.message || 'Error al rechazar la compra');
+            }
+        }
+    });
+};
 
 /* ==========================================================================
    10. MÓDULO: USUARIOS (/users - ADMIN)

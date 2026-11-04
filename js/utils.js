@@ -310,10 +310,34 @@ const Format = {
 
     loanStateBadge(state) {
         const classes = {
+            pendiente: 'badge badge-warning',
             activo: 'badge badge-warning',
-            devuelto: 'badge badge-success'
+            devolucion_solicitada: 'badge badge-primary',
+            devuelto: 'badge badge-success',
+            rechazado: 'badge badge-danger'
         };
-        return `<span class="${classes[state] || 'badge'}">${state}</span>`;
+        const labels = {
+            pendiente: 'Pendiente de aprobación',
+            activo: 'Préstamo activo',
+            devolucion_solicitada: 'Devolución solicitada',
+            devuelto: 'Devuelto',
+            rechazado: 'Rechazado'
+        };
+        return `<span class="${classes[state] || 'badge'}">${labels[state] || state || '—'}</span>`;
+    },
+
+    saleStateBadge(state) {
+        const classes = {
+            pendiente_pago: 'badge badge-warning',
+            confirmada: 'badge badge-success',
+            rechazada: 'badge badge-danger'
+        };
+        const labels = {
+            pendiente_pago: 'Pendiente de pago',
+            confirmada: 'Confirmada',
+            rechazada: 'Rechazada'
+        };
+        return `<span class="${classes[state] || 'badge'}">${labels[state] || state || '—'}</span>`;
     },
 
     roleBadge(role) {

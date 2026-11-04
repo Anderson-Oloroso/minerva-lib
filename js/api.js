@@ -289,6 +289,19 @@ class ApiClient {
             }
         }),
 
+        approve: (loanId, details) => this.request(`/loans/${loanId}/approve`, {
+            method: 'PUT',
+            body: { details }
+        }),
+
+        reject: (loanId) => this.request(`/loans/${loanId}/reject`, {
+            method: 'PUT'
+        }),
+
+        requestReturn: (loanId) => this.request(`/loans/${loanId}/return-request`, {
+            method: 'PUT'
+        }),
+
         /**
          * Devolver préstamo
          * @param {number} loanId
@@ -314,6 +327,12 @@ class ApiClient {
         create: (details) => this.request('/sales', {
             method: 'POST',
             body: { details }
+        }),
+        confirm: (saleId) => this.request(`/sales/${saleId}/confirm`, {
+            method: 'PUT'
+        }),
+        reject: (saleId) => this.request(`/sales/${saleId}/reject`, {
+            method: 'PUT'
         })
     };
 
