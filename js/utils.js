@@ -462,7 +462,12 @@ const Session = {
         return user && user.role === 'admin';
     },
 
-    logout() {
+    async logout() {
+        try {
+            if (window.api && window.api.auth) {
+                await window.api.auth.logout();
+            }
+        } catch {}
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem(this.USER_KEY);
         const target = window.location.pathname.includes('/pages/') ? '../index.html' : 'index.html';
