@@ -272,6 +272,7 @@ class ApiClient {
        7. PRÉSTAMOS (/loans)
        ====================================================================== */
     loans = {
+        getAll: () => this.request('/loans', { cache: 'no-store' }),
         getMine: () => this.request('/loans/me', { cache: 'no-store' }),
 
         /**
@@ -303,6 +304,7 @@ class ApiClient {
        8. VENTAS (/sales)
        ====================================================================== */
     sales = {
+        getAll: () => this.request('/sales', { cache: 'no-store' }),
         getMine: () => this.request('/sales/me', { cache: 'no-store' }),
 
         /**
