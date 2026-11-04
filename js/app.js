@@ -251,12 +251,12 @@ async function reloadAllData() {
         appState.loans = loansResult.data || [];
         appState.sales = salesResult.data || [];
         if (loansResult.error) {
-            console.error('Error cargando los préstamos del usuario:', loansResult.error);
-            Toast.error('No se pudieron cargar tus préstamos. Intenta actualizar la página.');
+            console.error('Error cargando los préstamos:', loansResult.error);
+            Toast.error('No se pudieron cargar los préstamos. Intenta actualizar la página.');
         }
         if (salesResult.error) {
-            console.error('Error cargando las ventas del usuario:', salesResult.error);
-            Toast.error('No se pudieron cargar tus ventas. Intenta actualizar la página.');
+            console.error('Error cargando las ventas:', salesResult.error);
+            Toast.error('No se pudieron cargar las ventas. Intenta actualizar la página.');
         }
 
         // Si el usuario es admin, cargar también usuarios
