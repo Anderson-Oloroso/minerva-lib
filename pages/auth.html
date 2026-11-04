@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minerva Lib - Iniciar Sesión / Registro</title>
+    <link rel="icon" type="image/png" href="../assets/icons/favicon.png">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="auth-page">
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <!-- Enlace a la Landing Page -->
+    <a href="../index.html" class="btn btn-secondary btn-sm" style="position: absolute; top: 1.5rem; left: 1.5rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Volver al Catálogo
+    </a>
+
+    <!-- Auth Container -->
+    <main class="auth-container">
+        <div class="auth-card">
+
+            <!-- Logo & Branding Oficial -->
+            <div class="auth-header">
+                <a href="../index.html" class="auth-logo">
+                    <img src="../assets/img/logo.png" alt="Minerva Lib" class="brand-logo-light">
+                    <img src="../assets/img/logo-dark.png" alt="Minerva Lib" class="brand-logo-dark">
+                </a>
+                <h1 class="auth-title">Cuenta de Lector</h1>
+                <p class="auth-subtitle">Accede a préstamos, historial y gestión de biblioteca</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="auth-tabs" role="tablist">
+                <button class="auth-tab active" id="tabLogin" role="tab" aria-selected="true" aria-controls="panelLogin" type="button">
+                    Iniciar Sesión
+                </button>
+                <button class="auth-tab" id="tabRegister" role="tab" aria-selected="false" aria-controls="panelRegister" type="button">
+                    Registrarse
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <div class="auth-panel active" id="panelLogin" role="tabpanel" aria-labelledby="tabLogin">
+                <form id="loginForm" class="auth-form" novalidate>
+                    <div class="form-group">
+                        <label class="form-label" for="loginEmail">Correo Electrónico</label>
+                        <input
+                            class="form-control"
+                            type="email"
+                            id="loginEmail"
+                            name="email"
+                            placeholder="ejemplo@correo.com"
+                            autocomplete="email"
+                            required
+                        >
+                        <span class="form-error" id="loginEmailError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="loginPassword">Contraseña</label>
+                        <div class="input-password-wrapper">
+                            <input
+                                class="form-control"
+                                type="password"
+                                id="loginPassword"
+                                name="password"
+                                placeholder="Ingrese su contraseña"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button type="button" class="password-toggle" aria-label="Mostrar contraseña" data-target="loginPassword">
+                                <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg class="icon-eye-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="form-error" id="loginPasswordError"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Iniciar Sesión
+                    </button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-panel" id="panelRegister" role="tabpanel" aria-labelledby="tabRegister">
+                <form id="registerForm" class="auth-form" novalidate>
+                    <div class="form-group">
+                        <label class="form-label" for="registerDpi">DPI (13 dígitos)</label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            id="registerDpi"
+                            name="dpi"
+                            placeholder="2987123450101"
+                            maxlength="13"
+                            required
+                        >
+                        <span class="form-error" id="registerDpiError"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="registerNombre">Nombre</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="registerNombre"
+                                name="nombre"
+                                placeholder="Tu nombre"
+                                required
+                            >
+                            <span class="form-error" id="registerNombreError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="registerApellido">Apellido</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="registerApellido"
+                                name="apellido"
+                                placeholder="Tu apellido"
+                                required
+                            >
+                            <span class="form-error" id="registerApellidoError"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="registerTelefono">Teléfono (8 dígitos)</label>
+                        <input
+                            class="form-control"
+                            type="tel"
+                            id="registerTelefono"
+                            name="telefono"
+                            placeholder="55551234"
+                            maxlength="8"
+                            required
+                        >
+                        <span class="form-error" id="registerTelefonoError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="registerEmail">Correo Electrónico</label>
+                        <input
+                            class="form-control"
+                            type="email"
+                            id="registerEmail"
+                            name="email"
+                            placeholder="correo@ejemplo.com"
+                            required
+                        >
+                        <span class="form-error" id="registerEmailError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="registerPassword">Contraseña</label>
+                        <div class="input-password-wrapper">
+                            <input
+                                class="form-control"
+                                type="password"
+                                id="registerPassword"
+                                name="password"
+                                placeholder="Mínimo 8 caracteres y un número"
+                                required
+                            >
+                            <button type="button" class="password-toggle" aria-label="Mostrar contraseña" data-target="registerPassword">
+                                <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg class="icon-eye-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="form-error" id="registerPasswordError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="registerConfirmPassword">Confirmar Contraseña</label>
+                        <div class="input-password-wrapper">
+                            <input
+                                class="form-control"
+                                type="password"
+                                id="registerConfirmPassword"
+                                name="confirmPassword"
+                                placeholder="Repite tu contraseña"
+                                required
+                            >
+                            <button type="button" class="password-toggle" aria-label="Mostrar contraseña" data-target="registerConfirmPassword">
+                                <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg class="icon-eye-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="form-error" id="registerConfirmPasswordError"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Crear Cuenta
+                    </button>
+                </form>
+            </div>
+
+            <footer class="auth-footer">
+                <p>&copy; 2026 Minerva Lib. Todos los derechos reservados.</p>
+            </footer>
+        </div>
+    </main>
+
+    <script src="../js/theme.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+</body>
+</html>
