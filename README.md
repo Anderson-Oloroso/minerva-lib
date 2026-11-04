@@ -29,7 +29,7 @@ Sistema web frontend completo para **Minerva Lib**, una plataforma moderna de ge
 minerva-lib/
 │
 ├── index.html                 # Landing page y catálogo público (consulta sin registro)
-├── README.md                  # Documentación integral de arquitectura y estructuras de datos
+├── README.md                  # Documentación del proyecto
 ├── LICENSE                    # Licencia del proyecto
 │
 ├── css/
@@ -54,121 +54,25 @@ minerva-lib/
 
 ---
 
-## 📊 Estructuras de Datos (DTOs & Modelos)
+## 🔌 Funcionamiento e integración con el backend
 
-La aplicación maneja las siguientes estructuras de datos en sus peticiones y respuestas:
+El frontend se comunica con `minerva-backend` mediante una API REST. `js/api.js` centraliza las solicitudes HTTP, agrega el prefijo `/api/v1`, convierte los cuerpos JSON y presenta los errores que devuelve el servidor. Las páginas de catálogo consultan los recursos públicos; el dashboard carga los datos de sus módulos desde la API según el usuario autenticado.
 
-### 1. Libros (`Book`)
-```json
-{
-  "id": 1,
-  "title": "Cien Años de Soledad",
-  "isbn": "9780307474728",
-  "year_publication": 1967,
-  "no_pages": 417,
-  "wrote_language": "Español",
-  "price": 125.50,
-  "stock": 10,
-  "image_url": "https://covers.openlibrary.org/.../example.jpg",
-  "id_author": 1,
-  "name_author": "Gabriel García Márquez",
-  "id_publisher": 1,
-  "name_publisher": "Editorial Sudamericana",
-  "id_genre": 1,
-  "name_genre": "Realismo Mágico"
-}
-```
+El flujo de autenticación funciona así:
+1. El usuario inicia sesión o se registra desde `pages/auth.html`; el frontend envía los datos al endpoint correspondiente.
+2. Al iniciar sesión correctamente, el backend devuelve un token de acceso y los datos del usuario. El navegador conserva el token para las solicitudes autenticadas.
+3. `js/api.js` envía el token en el encabezado `Authorization` en las solicitudes protegidas. El backend valida la identidad y los permisos antes de responder.
+4. El frontend muestra u oculta controles según el rol para adaptar la interfaz. La autorización real debe aplicarse siempre en el backend.
+5. Si el servidor devuelve un error HTTP, el cliente muestra el mensaje correspondiente; si la sesión ya no es válida, el usuario debe autenticarse de nuevo.
 
-### 2. Autores (`Author`)
-```json
-{
-  "id": 1,
-  "name": "Gabriel García Márquez"
-}
-```
+La aplicación no necesita credenciales de base de datos ni credenciales administrativas incrustadas en el frontend. Las credenciales y secretos del backend deben configurarse únicamente en el entorno privado del servidor; cualquier valor incluido en archivos estáticos del frontend es visible para sus usuarios.
 
-### 3. Géneros Literarios (`Genre`)
-```json
-{
-  "id": 1,
-  "genre": "Realismo Mágico"
-}
-```
-
-### 4. Casas Editoriales (`Publisher`)
-```json
-{
-  "id": 1,
-  "publisher": "Editorial Sudamericana"
-}
-```
-
-### 5. Clientes / Usuarios (`User` / `Client`)
-```json
-{
-  "id": 1,
-  "dpi": "3012345670101",
-  "name": "Admin Sistema",
-  "name_client": "Admin",
-  "last_name": "Sistema",
-  "phone": "55000000",
-  "email": "admin@minerva.com",
-  "role": "admin"
-}
-```
-
-### 6. Préstamos (`Loan`)
-```json
-{
-  "id_loan": 1,
-  "id_client": 2,
-  "name_client": "Juan Carlos Pérez",
-  "date_loan": "2026-11-01T10:00:00.000Z",
-  "expected_return_date": "2026-11-15T23:59:59.000Z",
-  "return_date": null,
-  "state_loan": "activo",
-  "details": [
-    {
-      "id_loan_detail": 1,
-      "id_book": 1,
-      "title": "Cien Años de Soledad",
-      "state_book_out": "Excelente",
-      "state_book_in": null
-    }
-  ]
-}
-```
-
-### 7. Ventas (`Sale`)
-```json
-{
-  "id_sale": 1,
-  "id_client": 2,
-  "name_client": "Juan Carlos Pérez",
-  "date_sale": "2026-11-01T11:30:00.000Z",
-  "total": 110.00,
-  "details": [
-    {
-      "id_sale_details": 1,
-      "id_book": 2,
-      "title": "La Casa de los Espíritus",
-      "amount": 1,
-      "unit_price": 110.00
-    }
-  ]
-}
-```
-
----
-
-## 🔌 Conexión con los Endpoints de `minerva-backend`
-
-El cliente `js/api.js` centraliza las peticiones con token JWT Bearer (`http://localhost:5000/api/v1`):
+La URL base de la API se puede configurar desde el indicador de estado de conexión. El valor se guarda en `localStorage` del navegador y se usa en las solicitudes posteriores. En desarrollo, la URL predeterminada es `http://localhost:5000/api/v1`; en producción, configura la URL pública HTTPS de la API desplegada, terminada en `/api/v1`.
 
 | Módulo | Método | Endpoint | Acceso Requerido | Descripción | Ubicación en Frontend |
 |---|---|---|---|---|---|
 | **Health** | `GET` | `/health` | Público | Comprueba estado del servidor | Badge indicador de estado |
-| **Auth** | `POST` | `/auth/login` | Público | Inicio de sesión, devuelve Bearer token | `pages/auth.html` |
+| **Auth** | `POST` | `/auth/login` | Público | Inicio de sesión; devuelve token de acceso y datos del usuario | `pages/auth.html` |
 | **Auth** | `POST` | `/auth/register` | Público | Registro de clientes con DPI de 13 dígitos | `pages/auth.html` |
 | **Auth** | `POST` | `/auth/logout` | Autenticado | Invalida sesión | Barra superior |
 | **Libros** | `GET` | `/books` | Público | Catálogo completo de libros | `index.html` & `dashboard.html` |
@@ -219,20 +123,19 @@ El frontend adapta la interfaz en tiempo real según el rol (`admin` o `client`)
 
 ## 🚀 Puesta en Marcha y Ejecución
 
-### 1. Iniciar el Servidor Backend (`minerva-backend`)
-En una terminal en la carpeta hermana `minerva-backend`:
+### 1. Iniciar el servidor backend (`minerva-backend`)
+En una terminal, desde la carpeta del backend:
 ```powershell
-cd c:\Users\Henrik\Music\Projects\minerva-backend
 npm install
 npm run dev
 ```
-El servidor backend iniciará en `http://localhost:5000/api/v1`.
+El servidor debe exponer la API en su URL local, por ejemplo `http://localhost:5000/api/v1`. La configuración de conexión a la base de datos y otros secretos pertenece al entorno privado del backend, no a este frontend ni a este README.
 
 ### 2. Abrir el Frontend (`minerva-lib`)
-Abre [index.html](file:///c:/Users/Henrik/Music/Projects/minerva-lib/index.html) en tu navegador web preferido (o usando un servidor de desarrollo estático como Live Server / `npx serve`).
+Sirve la carpeta del frontend con un servidor estático local (por ejemplo, Live Server o `npx serve`) y abre la dirección que indique el servidor. En producción, despliega los archivos estáticos y configura la URL de la API desplegada mediante el indicador de conexión.
 
 - Al iniciar, el frontend verificará automáticamente la conexión mostrando el indicador `🟢 API Conectada`.
-- Si el backend no estuviese activo, el indicador mostrará `🔴 Desconectado` y te permitirá configurar o cambiar la URL del servidor directamente haciendo clic en el badge.
+- Si el backend no estuviese activo, el indicador mostrará `🔴 Desconectado` y te permitirá configurar o cambiar la URL base de la API directamente haciendo clic en el indicador.
 - Si intentas realizar una acción que requiera autenticación desde la landing, una ventana modal te guiará al formulario de inicio de sesión o registro.
 
 ---
