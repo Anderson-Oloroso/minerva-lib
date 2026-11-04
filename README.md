@@ -76,7 +76,6 @@ La URL base de la API se puede configurar desde el indicador de estado de conexi
 | **Auth** | `POST` | `/auth/register` | Público | Registro de clientes con DPI de 13 dígitos | `pages/auth.html` |
 | **Auth** | `POST` | `/auth/logout` | Autenticado | Invalida sesión | Barra superior |
 | **Libros** | `GET` | `/books` | Público | Catálogo completo de libros | `index.html` & `dashboard.html` |
-| **Libros** | `GET` | `/books/:id` | Público | Detalle de libro por identificador | Modales de vista y edición |
 | **Libros** | `POST` | `/books` | Admin | Registrar nuevo título en inventario | Modal "Nuevo Libro" |
 | **Libros** | `PUT` | `/books/:id` | Admin | Actualizar datos de libro | Modal "Editar Libro" |
 | **Libros** | `DELETE` | `/books/:id` | Admin | Eliminar libro del catálogo | Modal de confirmación |

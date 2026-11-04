@@ -182,7 +182,6 @@ class ApiClient {
        ====================================================================== */
     books = {
         getAll: () => this.request('/books'),
-        getById: (id) => this.request(`/books/${id}`),
         create: (bookData) => this.request('/books', {
             method: 'POST',
             body: {
@@ -216,7 +215,6 @@ class ApiClient {
        ====================================================================== */
     authors = {
         getAll: () => this.request('/authors'),
-        getById: (id) => this.request(`/authors/${id}`),
         create: (name) => this.request('/authors', {
             method: 'POST',
             body: { name }
@@ -235,7 +233,6 @@ class ApiClient {
        ====================================================================== */
     genres = {
         getAll: () => this.request('/genres'),
-        getById: (id) => this.request(`/genres/${id}`),
         create: (genreName) => this.request('/genres', {
             method: 'POST',
             body: { genre: genreName }
@@ -254,7 +251,6 @@ class ApiClient {
        ====================================================================== */
     publishers = {
         getAll: () => this.request('/publishers'),
-        getById: (id) => this.request(`/publishers/${id}`),
         create: (publisherName) => this.request('/publishers', {
             method: 'POST',
             body: { publisher: publisherName }
@@ -352,7 +348,6 @@ class ApiClient {
 
         // Gestión administrativa (/users)
         getAll: () => this.request('/users'),
-        getById: (id) => this.request(`/users/${id}`),
         create: (userData) => this.request('/users', {
             method: 'POST',
             body: {
