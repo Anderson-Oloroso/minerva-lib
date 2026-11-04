@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minerva Lib - Catálogo de Libros y Biblioteca</title>
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="landing-page">
+
+    <!-- ========== NAVBAR ========== -->
+    <header class="landing-nav">
+        <div class="landing-nav-container">
+            <a href="index.html" class="brand-link" aria-label="Inicio Minerva Lib">
+                <img src="assets/img/logo.png" alt="Minerva Lib" class="brand-logo-img brand-logo-light">
+                <img src="assets/img/logo-dark.png" alt="Minerva Lib" class="brand-logo-img brand-logo-dark">
+            </a>
+
+            <nav class="landing-nav-links">
+                <a href="#inicio" class="landing-nav-link active">Inicio</a>
+                <a href="#catalogo" class="landing-nav-link">Catálogo</a>
+                <a href="#como-funciona" class="landing-nav-link">Cómo Funciona</a>
+            </nav>
+
+            <div class="landing-nav-actions">
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar a tema oscuro o claro">
+                    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+
+                <!-- Auth Buttons Dinámicos -->
+                <div id="nav-auth-buttons" style="display: flex; gap: 0.65rem;">
+                    <a href="pages/auth.html" class="btn btn-secondary btn-sm" id="btn-nav-login">Iniciar Sesión</a>
+                    <a href="pages/auth.html" class="btn btn-primary btn-sm" id="btn-nav-register">Registrarse</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== HERO SECTION ========== -->
+    <section class="hero-section" id="inicio">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                Biblioteca & Conocimiento Abierto
+            </div>
+            <h1 class="hero-title">
+                Descubre el saber infinito con <span class="highlight">Minerva Lib</span>
+            </h1>
+            <p class="hero-description">
+                Explora libremente nuestro catálogo de literatura universal, ciencias y artes. 
+                Si deseas solicitar un préstamo para llevar a casa o realizar compras de ejemplares, 
+                inicia sesión con tu cuenta de lector.
+            </p>
+            <div class="hero-actions">
+                <a href="#catalogo" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    Explorar Libros
+                </a>
+                <a href="pages/auth.html" class="btn btn-secondary">
+                    Acceder a mi Cuenta
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-badge-card">
+                <img src="assets/icons/app-icon.png" alt="Icono Minerva Lib" class="hero-app-icon">
+                <h3 class="hero-card-title">Minerva Lib</h3>
+                <p class="hero-card-desc">Sabiduría clásica en una plataforma moderna, rápida y accesible para toda la comunidad lectora.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== STATS BANNER ========== -->
+    <section class="stats-banner">
+        <div class="stats-banner-container">
+            <div class="stats-banner-item">
+                <h3 id="stat-banner-books">--</h3>
+                <p>Libros en Catálogo</p>
+            </div>
+            <div class="stats-banner-item">
+                <h3 id="stat-banner-authors">100%</h3>
+                <p>Colección Auténtica</p>
+            </div>
+            <div class="stats-banner-item">
+                <h3 id="stat-banner-genres">--</h3>
+                <p>Géneros Literarios</p>
+            </div>
+            <div class="stats-banner-item">
+                <h3 id="stat-banner-loans">100%</h3>
+                <p>Acceso Gratuito de Consulta</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CATÁLOGO PÚBLICO ========== -->
+    <section class="landing-catalog-section" id="catalogo">
+        <div class="catalog-header">
+            <span class="catalog-section-badge">Catálogo Oficial</span>
+            <h2 class="catalog-section-title">Colección de Libros</h2>
+            <p class="catalog-section-desc">
+                Consulta los títulos disponibles. Puedes buscar por nombre, autor o filtrar por tus géneros favoritos.
+            </p>
+        </div>
+
+        <!-- Controles de Búsqueda y Filtros -->
+        <div class="catalog-controls">
+            <div class="catalog-search-wrapper">
+                <svg class="catalog-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input 
+                    type="text" 
+                    id="landing-search-input" 
+                    class="catalog-search-input" 
+                    placeholder="Buscar por título de libro, autor o editorial..."
+                    aria-label="Buscar libros"
+                >
+            </div>
+
+            <!-- Chips de Géneros (Poblados dinámicamente desde el backend) -->
+            <div class="filter-chips" id="genre-filter-chips">
+                <button class="filter-chip active" data-genre="all">Todos los géneros</button>
+            </div>
+        </div>
+
+        <!-- Cuadrícula de Libros -->
+        <div class="landing-books-grid" id="landing-books-grid">
+            <!-- Renderizado dinámico vía JavaScript -->
+        </div>
+
+        <!-- Tarjeta Informativa para Préstamos y Ventas -->
+        <div class="guest-banner-card">
+            <h3 class="guest-banner-title">¿Deseas llevarte un libro en préstamo o adquirirlo?</h3>
+            <p class="guest-banner-desc">
+                Para garantizar la seguridad de nuestra colección, las solicitudes de préstamo y compras 
+                requieren que te identifiques con tu cuenta de lector. Registrarse toma menos de 1 minuto con tu DPI.
+            </p>
+            <div style="display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                <a href="pages/auth.html" class="btn btn-primary">Iniciar Sesión para Préstamos</a>
+                <a href="pages/auth.html" class="btn btn-secondary">Crear Cuenta Gratis</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CÓMO FUNCIONA ========== -->
+    <section class="landing-catalog-section" id="como-funciona" style="padding-top: 0;">
+        <div class="catalog-header">
+            <span class="catalog-section-badge">Pasos Sencillos</span>
+            <h2 class="catalog-section-title">¿Cómo funciona Minerva Lib?</h2>
+            <p class="catalog-section-desc">Diseñado para ser rápido, amigable e intuitivo.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+            <div class="stat-card" style="flex-direction: column; text-align: center; padding: 2rem;">
+                <div class="stat-icon stat-icon--books" style="margin: 0 auto 1rem auto; width: 68px; height: 68px;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">1. Explora el Catálogo</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                    Revisa libremente todos los libros, autores y existencias disponibles en la biblioteca sin necesidad de registro.
+                </p>
+            </div>
+
+            <div class="stat-card" style="flex-direction: column; text-align: center; padding: 2rem;">
+                <div class="stat-icon stat-icon--authors" style="margin: 0 auto 1rem auto; width: 68px; height: 68px;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">2. Accede con tu DPI</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                    Crea tu cuenta de lector con tu DPI de 13 dígitos para activar tus derechos de préstamo y seguimiento de préstamos activos.
+                </p>
+            </div>
+
+            <div class="stat-card" style="flex-direction: column; text-align: center; padding: 2rem;">
+                <div class="stat-icon stat-icon--genres" style="margin: 0 auto 1rem auto; width: 68px; height: 68px;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">3. Préstamo o Compra</h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                    Solicita tu préstamo con fecha esperada de devolución o realiza compras directas desde tu panel de usuario.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="landing-footer">
+        <div class="landing-footer-container">
+            <div>
+                <img src="assets/img/logo-dark.png" alt="Minerva Lib" style="height: 48px; margin-bottom: 1rem;">
+                <p class="footer-brand-desc">
+                    Minerva Lib es el sistema integral de gestión bibliotecaria inspirado en la diosa de la sabiduría, 
+                    desarrollado con arquitectura moderna, tipografía Montserrat y un catálogo de libre acceso.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Navegación</h4>
+                <div class="footer-links">
+                    <a href="#inicio" class="footer-link">Inicio</a>
+                    <a href="#catalogo" class="footer-link">Catálogo de Libros</a>
+                    <a href="#como-funciona" class="footer-link">Cómo Funciona</a>
+                    <a href="pages/auth.html" class="footer-link">Cuenta de Lector</a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Identidad Visual</h4>
+                <div class="footer-links">
+                    <span class="footer-link">Tipografía: Montserrat</span>
+                    <span class="footer-link">Primario: #0B2D62</span>
+                    <span class="footer-link">Dorado: #F4B942</span>
+                    <span class="footer-link">Crema: #FAF3E0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Minerva Lib. Todos los derechos reservados.</p>
+            <p>Diseño y Arquitectura de Frontend Vanilla</p>
+        </div>
+    </footer>
+
+    <!-- ========== MODAL DE AVISO PARA ACCIONES QUE REQUIEREN LOGIN ========== -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Acceso de Lector</h3>
+                <button class="modal-close" id="modal-close" aria-label="Cerrar modal">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer" id="modal-footer">
+                <button class="btn btn-secondary" id="modal-cancel">Cancelar</button>
+                <button class="btn btn-primary" id="modal-confirm">Iniciar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts de la Landing -->
+    <script src="js/theme.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/landing.js"></script>
+</body>
+</html>
