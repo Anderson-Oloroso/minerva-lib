@@ -6,8 +6,7 @@
 'use strict';
 
 const API_CONFIG = {
-    // URL base por defecto del backend Express (puerto 5000 según .env)
-    DEFAULT_BASE_URL: 'http://localhost:5000/api/v1',
+    DEFAULT_BASE_URL: 'https://minerva-backend-gja1.onrender.com/api/v1',
     STORAGE_KEY: 'minerva-api-url',
 
     getBaseUrl() {
@@ -18,7 +17,6 @@ const API_CONFIG = {
         if (!url) {
             localStorage.removeItem(this.STORAGE_KEY);
         } else {
-            // Remover barra final si existe
             const cleanUrl = url.replace(/\/+$/, '');
             localStorage.setItem(this.STORAGE_KEY, cleanUrl);
         }
