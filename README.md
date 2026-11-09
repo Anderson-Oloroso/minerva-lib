@@ -2,9 +2,14 @@
 
 Sistema web frontend completo para **Minerva Lib**, una plataforma moderna de gestión bibliotecaria y catálogo literario público, conectada en tiempo real con el servidor REST **`minerva-backend`** (Node.js, Express 5, JWT, MySQL).
 
+## Aplicación desplegada y backend
+
+- **Aplicación en Netlify:** [Abrir Minerva Lib](https://minerva-lib.netlify.app/)
+- **Backend:** [Repositorio minerva-backend](https://github.com/Anderson-Oloroso/minerva-backend)
+
 ---
 
-## 🎨 Identidad Visual & Manual de Marca
+## Identidad Visual & Manual de Marca
 
 - **Tipografía Oficial:** [Montserrat](https://fonts.google.com/specimen/Montserrat) (Regular 400, Medium 500, SemiBold 600, Bold 700 y ExtraBold 800).
 - **Paleta Cromática Oficial:**
@@ -23,7 +28,7 @@ Sistema web frontend completo para **Minerva Lib**, una plataforma moderna de ge
 
 ---
 
-## 🏛️ Estructura del Proyecto
+## Estructura del Proyecto
 
 ```text
 minerva-lib/
@@ -54,7 +59,7 @@ minerva-lib/
 
 ---
 
-## 🔌 Funcionamiento e integración con el backend
+## Funcionamiento e integración con el backend
 
 El frontend se comunica con `minerva-backend` mediante una API REST. `js/api.js` centraliza las solicitudes HTTP, agrega el prefijo `/api/v1`, convierte los cuerpos JSON y presenta los errores que devuelve el servidor. Las páginas de catálogo consultan los recursos públicos; el dashboard carga los datos de sus módulos desde la API según el usuario autenticado.
 
@@ -104,7 +109,7 @@ La URL base de la API se puede configurar desde el indicador de estado de conexi
 
 ---
 
-## 🔒 Control de Acceso por Roles (RBAC)
+## Control de Acceso por Roles (RBAC)
 
 El frontend adapta la interfaz en tiempo real según el rol (`admin` o `client`):
 - **Lectores (`client`):**
@@ -120,7 +125,7 @@ El frontend adapta la interfaz en tiempo real según el rol (`admin` o `client`)
 
 ---
 
-## 🚀 Puesta en Marcha y Ejecución
+## Puesta en Marcha y Ejecución
 
 ### 1. Iniciar el servidor backend (`minerva-backend`)
 En una terminal, desde la carpeta del backend:
@@ -133,13 +138,13 @@ El servidor debe exponer la API en su URL local, por ejemplo `http://localhost:5
 ### 2. Abrir el Frontend (`minerva-lib`)
 Sirve la carpeta del frontend con un servidor estático local (por ejemplo, Live Server o `npx serve`) y abre la dirección que indique el servidor. En producción, despliega los archivos estáticos y configura la URL de la API desplegada mediante el indicador de conexión.
 
-- Al iniciar, el frontend verificará automáticamente la conexión mostrando el indicador `🟢 API Conectada`.
-- Si el backend no estuviese activo, el indicador mostrará `🔴 Desconectado` y te permitirá configurar o cambiar la URL base de la API directamente haciendo clic en el indicador.
+- Al iniciar, el frontend verificará automáticamente la conexión mostrando el indicador `API Conectada`.
+- Si el backend no estuviese activo, el indicador mostrará `Desconectado` y te permitirá configurar o cambiar la URL base de la API directamente haciendo clic en el indicador.
 - Si intentas realizar una acción que requiera autenticación desde la landing, una ventana modal te guiará al formulario de inicio de sesión o registro.
 
 ---
 
-## 📝 Convenciones de Código y Estado
+## Convenciones de Código y Estado
 - **Cero código demo:** No existen usuarios simulados, contraseñas quemadas ni arreglos ficticios en memoria; todas las operaciones interactúan directamente con la base de datos MySQL vía la API REST.
 - **Validación robusta:** Las validaciones de cliente coinciden con las restricciones de la base de datos (DPI de 13 dígitos, teléfono de 8 dígitos, contraseñas con longitud mínima de 8 caracteres y números).
 - **Manejo de errores amigable:** Los errores de base de datos o de validación emitidos por el servidor son extraídos y presentados claramente en banners y notificaciones Toast.
