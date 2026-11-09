@@ -56,9 +56,11 @@ function checkUserSession() {
 
         const logoutBtn = document.getElementById('landing-btn-logout');
         if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => {
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await window.api.auth.logout();
+                } catch {}
                 Session.logout();
-                window.location.reload();
             });
         }
     }
